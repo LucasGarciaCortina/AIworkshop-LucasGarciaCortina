@@ -16,32 +16,6 @@ const CEREBRAS_BASE_URL = process.env.CEREBRAS_BASE_URL || "https://api.cerebras
 const CEREBRAS_MODEL = process.env.CEREBRAS_MODEL || "llama-3.3-70b";
 const CEREBRAS_API_KEY = process.env.CEREBRAS_API_KEY;
 
-app.get("/api/health", (req, res) => {
-  res.json({ ok: true, service: "llm-workshop-app" });
-});
-
-// (Extra dinámico) listar modelos disponibles en Cerebras (OpenAI-compatible)
-app.get("/api/models", async (req, res) => {
-  try {
-    if (!CEREBRAS_API_KEY) {
-      return res.status(500).json({ error: "Missing CEREBRAS_API_KEY" });
-    }
-
-    const r = await fetch(`${CEREBRAS_BASE_URL}/models`, {
-      headers: {
-        Authorization: `Bearer ${CEREBRAS_API_KEY}`
-      }
-    });
-
-    const data = await r.json();
-    if (!r.ok) return res.status(r.status).json(data);
-
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to list models", details: err?.message ?? String(err) });
-  }
-});
-
 // Endpoint principal: ticketify (devuelve JSON en texto, y el front lo parsea)
 app.post("/api/ticket", async (req, res) => {
   try {
@@ -54,26 +28,22 @@ app.post("/api/ticket", async (req, res) => {
       return res.status(400).json({ error: "incidentText is required" });
     }
 
+    
+    
     const system = `
 Devuelve SOLO JSON válido (sin markdown, sin texto extra).
 Idioma: español.
-NO inventes datos. Si falta información, usa "unknown" o [].
-Si hay dudas, añade preguntas en "questions_to_user".
-
-Esquema JSON obligatorio:
+NO inventes datos.
+Tarea
+Esquema JSON obligatorio de salida:
 {
-  "title": string,
-  "summary": string,
-  "steps_to_reproduce": string[],
-  "expected": string,
-  "actual": string,
-  "severity": "low" | "medium" | "high",
-  "tags": string[],
-  "questions_to_user": string[]
+    "id": "string",
+    "summary": "string"
+
 }
 `.trim();
 
-    const user = `INCIDENCIA:\n${incidentText}`;
+    const user = `Texto a analizar:\n${incidentText}`;
 
     const payload = {
       model: CEREBRAS_MODEL,
@@ -81,10 +51,6 @@ Esquema JSON obligatorio:
         { role: "system", content: system },
         { role: "user", content: user }
       ],
-      temperature,
-      max_tokens: maxTokens,
-      stream: false,
-      // JSON “legacy” (funciona bien con instrucción explícita)
       response_format: { type: "json_object" }
     };
 

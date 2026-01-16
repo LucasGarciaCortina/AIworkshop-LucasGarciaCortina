@@ -10,5 +10,41 @@
     <div id="app"></div>
 
     <script type="module" src="/app.js"></script>
+    <h1>Sesión I — LLMs en una Web (Cerebras)</h1>
+  <p class="small">Objetivo: convertir una incidencia en un ticket (JSON) usando un backend seguro.</p>
+
+  <div class="card">
+    <div class="row">
+      <button id="exampleBtn">Cargar ejemplo</button>
+
+      <label class="small">
+        Temperature:
+        <input id="temperature" type="number" min="0" max="1.5" step="0.1" value="0.2" />
+      </label>
+
+      <label class="small">
+        Max tokens:
+        <input id="maxTokens" type="number" min="50" max="1000" step="50" value="350" />
+      </label>
+
+      <button id="runBtn">Ticketify</button>
+      <button id="modelsBtn">Listar modelos</button>
+    </div>
+
+    <textarea id="incident" placeholder="Pega aquí una incidencia 'a lo usuario'..."></textarea>
+  </div>
+
+  <div class="card">
+    <h3>Salida (raw)</h3>
+    <pre id="raw"></pre>
+    <div class="small" id="usage"></div>
+  </div>
+
+  <div class="card">
+    <h3>Validación JSON</h3>
+    <pre id="parsed"></pre>
+  </div>
   </body>
+
+  
 </html>

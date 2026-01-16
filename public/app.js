@@ -1,42 +1,4 @@
 const root = document.getElementById("app");
-
-root.innerHTML = `
-  <h1>Sesión I — LLMs en una Web (Cerebras)</h1>
-  <p class="small">Objetivo: convertir una incidencia en un ticket (JSON) usando un backend seguro.</p>
-
-  <div class="card">
-    <div class="row">
-      <button id="exampleBtn">Cargar ejemplo</button>
-
-      <label class="small">
-        Temperature:
-        <input id="temperature" type="number" min="0" max="1.5" step="0.1" value="0.2" />
-      </label>
-
-      <label class="small">
-        Max tokens:
-        <input id="maxTokens" type="number" min="50" max="1000" step="50" value="350" />
-      </label>
-
-      <button id="runBtn">Ticketify</button>
-      <button id="modelsBtn">Listar modelos</button>
-    </div>
-
-    <textarea id="incident" placeholder="Pega aquí una incidencia 'a lo usuario'..."></textarea>
-  </div>
-
-  <div class="card">
-    <h3>Salida (raw)</h3>
-    <pre id="raw"></pre>
-    <div class="small" id="usage"></div>
-  </div>
-
-  <div class="card">
-    <h3>Validación JSON</h3>
-    <pre id="parsed"></pre>
-  </div>
-`;
-
 const incidentEl = document.getElementById("incident");
 const tempEl = document.getElementById("temperature");
 const maxEl = document.getElementById("maxTokens");
@@ -50,6 +12,7 @@ const EXAMPLES = [
   "la página de perfil tarda 10 segundos en cargar. ayer iba bien, hoy imposible"
 ];
 
+
 document.getElementById("exampleBtn").addEventListener("click", () => {
   incidentEl.value = EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
 });
@@ -58,9 +21,6 @@ document.getElementById("runBtn").addEventListener("click", async () => {
   rawEl.textContent = "";
   parsedEl.textContent = "";
   usageEl.textContent = "";
-
-  // ❌ BUG INTENCIONAL (SyntaxError real): falta una coma después de incidentText
-  // Arreglo en clase: añade una coma al final de la línea "incidentText: incidentEl.value,"
   const payload = {
     incidentText: incidentEl.value,
     temperature: Number(tempEl.value),
