@@ -7,44 +7,70 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div id="app"></div>
+    <header class="header">
+      <div class="header-content">
+        <h1>Análisis de Incidencias</h1>
+        <p class="subtitle">Detección automática de anomalías en reportes policiales con IA</p>
+      </div>
+    </header>
+
+    <main>
+      <div class="card input-card">
+        <div class="card-header">
+          <h2>Datos del Reporte</h2>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="reportId">ID Informe</label>
+            <input id="reportId" type="text" placeholder="ej. POL-2026-001" class="input-field" />
+          </div>
+
+          <div class="form-group">
+            <label for="reportDate">Fecha</label>
+            <input id="reportDate" type="date" class="input-field" />
+          </div>
+
+          <div class="form-group">
+            <label for="reportLocation">Lugar</label>
+            <input id="reportLocation" type="text" placeholder="ej. Calle Principal, Centro" class="input-field" />
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="incident">Descripción del Incidente</label>
+          <textarea id="incident" placeholder="Describe aquí los detalles del incidente. Ej: 'Oficial respondió a llamada de disturbio doméstico...'" class="textarea-field"></textarea>
+        </div>
+
+        <div class="button-group">
+          <button id="exampleBtn" class="btn btn-secondary">📋 Cargar Ejemplo</button>
+          <button id="runBtn" class="btn btn-primary">🔍 Analizar Incidencias</button>
+        </div>
+      </div>
+
+      <div class="card" id="anomalies-card">
+        <div class="card-header">
+          <h2>Anomalías Detectadas</h2>
+        </div>
+        <div id="anomalies-container"></div>
+      </div>
+
+      <div class="card results-card">
+        <div class="card-header">
+          <h2>Respuesta del Análisis</h2>
+        </div>
+        <div class="results-tabs">
+          <button class="tab-btn active" data-tab="raw">Salida Completa</button>
+          <button class="tab-btn" data-tab="parsed">Validación JSON</button>
+        </div>
+        <div class="tab-content">
+          <div id="raw" class="tab-pane active"></div>
+          <div id="parsed" class="tab-pane"></div>
+        </div>
+        <div class="usage-info" id="usage"></div>
+      </div>
+    </main>
 
     <script type="module" src="/app.js"></script>
-    <h1>Sesión I — LLMs en una Web (Cerebras)</h1>
-  <p class="small">Objetivo: convertir una incidencia en un ticket (JSON) usando un backend seguro.</p>
-
-  <div class="card">
-    <div class="row">
-      <button id="exampleBtn">Cargar ejemplo</button>
-
-      <label class="small">
-        Temperature:
-        <input id="temperature" type="number" min="0" max="1.5" step="0.1" value="0.2" />
-      </label>
-
-      <label class="small">
-        Max tokens:
-        <input id="maxTokens" type="number" min="50" max="1000" step="50" value="350" />
-      </label>
-
-      <button id="runBtn">Ticketify</button>
-      <button id="modelsBtn">Listar modelos</button>
-    </div>
-
-    <textarea id="incident" placeholder="Pega aquí una incidencia 'a lo usuario'..."></textarea>
-  </div>
-
-  <div class="card">
-    <h3>Salida (raw)</h3>
-    <pre id="raw"></pre>
-    <div class="small" id="usage"></div>
-  </div>
-
-  <div class="card">
-    <h3>Validación JSON</h3>
-    <pre id="parsed"></pre>
-  </div>
   </body>
-
-  
 </html>

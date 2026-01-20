@@ -23,7 +23,7 @@ app.post("/api/ticket", async (req, res) => {
       return res.status(500).json({ error: "Missing CEREBRAS_API_KEY" });
     }
 
-    const { incidentText = "", temperature = 0.2, maxTokens = 350 } = req.body ?? {};
+    const { reportId = "", reportDate = "", reportLocation = "", incidentText = "", temperature = 0.2, maxTokens = 350 } = req.body ?? {};
     if (!incidentText.trim()) {
       return res.status(400).json({ error: "incidentText is required" });
     }
@@ -31,19 +31,35 @@ app.post("/api/ticket", async (req, res) => {
     
     
     const system = `
-Devuelve SOLO JSON válido (sin markdown, sin texto extra).
-Idioma: español.
-NO inventes datos.
-Tarea
-Esquema JSON obligatorio de salida:
-{
-    "id": "string",
-    "summary": "string"
+  Devuelve SOLO JSON válido (sin markdown, sin texto extra).
+  Idioma: español.
+  NO inventes datos.
+  Tarea: Detecta anomalías en reportes policiales.
+  Identifica inconsistencias, patrones sospechosos, detalles faltantes o incoherentes.
+  Esquema JSON obligatorio de salida:
+  {
+    "report_id": "string",
+    "report_date": "string",
+    "report_location": "string",
+    "anomalies": [
+      {
+        "detail": "string",
+        "severity": "low|medium|high"
+      }
+    ],
+    "details": "string"
+  }
+  `.trim();
 
-}
-`.trim();
+    const user = `Reporte policial a analizar para detectar anomalías:
 
-    const user = `Texto a analizar:\n${incidentText}`;
+Metadatos del informe:
+- ID: ${reportId || "No especificado"}
+- Fecha: ${reportDate || "No especificada"}
+- Lugar: ${reportLocation || "No especificado"}
+
+Descripción del incidente:
+${incidentText}`
 
     const payload = {
       model: CEREBRAS_MODEL,
